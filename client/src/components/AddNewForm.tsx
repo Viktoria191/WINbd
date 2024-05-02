@@ -1,22 +1,33 @@
 import React from 'react';
 import { Button, FormControl } from '@mui/material';
 import CustomTextField from './CustomTextField/CustomTextField';
-import { useAppDispatch } from '../redux/hook';
+import { useAppDispatch, useAppSelector } from '../redux/hook';
 import type { AddNewFormData } from '../types/new/new';
 import { thunkAddNew } from '../redux/slices/news/createAsyncThunk';
 
 function AddNewForm(): JSX.Element {
   const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.authSlice.user);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = Object.fromEntries(new FormData(e.currentTarget)) as AddNewFormData;
+    if (user.status === 'authenticated') {
+      const formDataWithUser = {
+        ...formData,
+        userId: user.id,
+      };
+      void dispatch(thunkAddNew(formDataWithUser));
+      console.log(formDataWithUser);
+    } else {
+      console.log('User is not authenticated');
+    }
+
+    e.currentTarget.reset();
+  };
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        const formData = Object.fromEntries(new FormData(e.currentTarget)) as AddNewFormData;
-        void dispatch(thunkAddNew(formData));
-        e.currentTarget.reset();
-      }}
-    >
+    <form encType="multipart/form-data" onSubmit={handleSubmit}>
       <FormControl
         sx={{
           margin: '30px',
@@ -33,7 +44,7 @@ function AddNewForm(): JSX.Element {
         <CustomTextField name="title" label="Заголовок" type="text" />
         <CustomTextField name="text" label="Текст" type="text" />
         <CustomTextField name="quote" label="Цитата" type="text" />
-        <CustomTextField name="img" label="Изображение" type="text" />
+        <CustomTextField name="img_url" label="Изображение" type="file" />
         <Button type="submit">Добавить</Button>
       </FormControl>
     </form>

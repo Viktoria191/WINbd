@@ -6,7 +6,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import type { NewType } from '../types/new/new';
-import { useAppDispatch } from '../redux/hook';
+import { useAppDispatch, useAppSelector } from '../redux/hook';
 import { setCurrentNew } from '../redux/slices/news/newsSlice';
 import { thunkDeleteNew } from '../redux/slices/news/createAsyncThunk';
 
@@ -16,9 +16,10 @@ type NewTypeProps = {
 
 function NewCard({ novelty }: NewTypeProps): JSX.Element {
   const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.authSlice.user);
   return (
     <Card sx={{ maxWidth: 345 }}>
-      <CardMedia sx={{ height: 300 }} image={novelty.img} title="new" />
+      <CardMedia sx={{ height: 300 }} image={novelty.img_url} title="new" />
       <CardContent>
         <Typography gutterBottom variant="h3" component="div">
           {novelty.title}
@@ -30,19 +31,21 @@ function NewCard({ novelty }: NewTypeProps): JSX.Element {
           {novelty.quote}
         </Typography>
       </CardContent>
-      <CardActions>
-        <Button size="small" onClick={() => void dispatch(thunkDeleteNew(novelty.id))}>
-          Удалить
-        </Button>
-        <Button
-          size="small"
-          onClick={() => {
-            dispatch(setCurrentNew(novelty));
-          }}
-        >
-          Изменить
-        </Button>
-      </CardActions>
+      {user.status === 'authenticated' && user.id === novelty.userId ? (
+        <CardActions>
+          <Button size="small" onClick={() => void dispatch(thunkDeleteNew(novelty.id))}>
+            Удалить
+          </Button>
+          <Button
+            size="small"
+            onClick={() => {
+              dispatch(setCurrentNew(novelty));
+            }}
+          >
+            Изменить
+          </Button>
+        </CardActions>
+      ) : null}
     </Card>
   );
 }

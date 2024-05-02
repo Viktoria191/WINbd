@@ -2,7 +2,7 @@ export type NewType = {
   id: number;
   title: string;
   text: string;
-  img: string;
+  img_url: string;
   quote: number;
   userId: number;
   createdAt: Date;
@@ -12,10 +12,10 @@ export type NewType = {
 export type AddNewFormData = {
   title: string;
   text: string;
-  img: string;
-  quote: number;
+  img_url: string;
+  quote: string;
+  userId: number;
 };
-
 
 export type NewSliceState = {
   news: NewType[];

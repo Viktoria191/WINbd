@@ -14,7 +14,7 @@ module.exports = {
       text: {
         type: Sequelize.TEXT,
       },
-      img: {
+      img_url: {
         type: Sequelize.TEXT,
       },
       quote: {

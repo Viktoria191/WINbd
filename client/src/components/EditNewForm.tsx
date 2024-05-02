@@ -44,7 +44,7 @@ function EditNewForm(): JSX.Element {
           type="text"
           defaultValue={content?.quote}
         />
-        <CustomTextField name="img" label="Изображение" type="text" defaultValue={content?.img} />
+        <CustomTextField name="img_url" label="Изображение" type="text" defaultValue={content?.img_url} />
         <Box>
           <Button type="submit" color="inherit">
             Изменить
